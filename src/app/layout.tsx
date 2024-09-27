@@ -1,11 +1,9 @@
-// app/layout.tsx
-
 import type { Metadata } from "next";
 import { Box } from "@mui/material";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Your Page Title",
+  title: "Login System",
   description: "Description of your page",
 };
 
@@ -19,7 +17,7 @@ export default function RootLayout({
       <body className="antialiased">
         <Box
           sx={{
-            backgroundColor: 'orange', // Background color
+            backgroundColor: '#f0f0f0', // Light gray background
             minHeight: '100vh', // Full viewport height
             display: 'flex',
             flexDirection: 'column',

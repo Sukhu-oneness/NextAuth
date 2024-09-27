@@ -1,9 +1,15 @@
-// pages/signin.tsx
-
 'use client';
 
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Snackbar } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  Avatar,
+} from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
 
@@ -41,9 +47,6 @@ const SignIn: React.FC = () => {
       setSnackbarOpen(true);
       return; // Stop form submission
     }
-
-    // Log form data to console
-    console.log('Form Data Submitted:', formData);
 
     const response = await fetch('/api/signin', {
       method: 'POST',
@@ -88,6 +91,16 @@ const SignIn: React.FC = () => {
           borderRadius: 2,
         }}
       >
+        <Avatar
+          sx={{
+            m: 1,
+            bgcolor: 'primary.main',
+            width: 56,
+            height: 56,
+          }}
+        >
+          <img src="/image.png" alt="Logo" style={{ width: '100%', height: '100%' }} />
+        </Avatar>
         <Typography component="h1" variant="h5">
           Sign In
         </Typography>
@@ -126,7 +139,7 @@ const SignIn: React.FC = () => {
           </Button>
         </Box>
       </Box>
-      
+
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
           {snackbarMessage}

@@ -1,9 +1,16 @@
-// app/signup.tsx
-
 'use client';
 
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Snackbar } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  CircularProgress,
+  Avatar,
+} from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { useRouter } from 'next/navigation';
 
@@ -18,11 +25,12 @@ const SignUp: React.FC = () => {
     password: '',
   });
 
+  const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -34,17 +42,16 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true); // Start loading
 
     // Validation: Check for empty fields
     if (!formData.name || !formData.email || !formData.password) {
       setSnackbarMessage('All fields are required. Please fill them out.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
+      setLoading(false); // Stop loading
       return; // Stop form submission
     }
-
-    // Log form data to console
-    console.log('Form Data Submitted:', formData);
 
     const response = await fetch('/api/signup', {
       method: 'POST',
@@ -57,6 +64,7 @@ const SignUp: React.FC = () => {
     const result = await response.json();
 
     // Handle response
+    setLoading(false); // Stop loading
     if (result.success) {
       setSnackbarMessage('User registered successfully!');
       setSnackbarSeverity('success');
@@ -64,10 +72,10 @@ const SignUp: React.FC = () => {
 
       // Redirect to login page after a brief delay
       setTimeout(() => {
-        router.push('/login'); // Change this to your actual login page route
-      }, 2000); // Adjust delay as needed
+        router.push('/login');
+      }, 2000);
     } else {
-      setSnackbarMessage('User not registered. Please try again.');
+      setSnackbarMessage(result.message || 'User not registered. Please try again.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
@@ -83,14 +91,24 @@ const SignUp: React.FC = () => {
         sx={{
           marginTop: 8,
           display: 'flex',
-          color: 'black',
           flexDirection: 'column',
+          color :'black' ,
           alignItems: 'center',
           backgroundColor: '#f5f5f5',
           padding: 3,
           borderRadius: 2,
         }}
       >
+        <Avatar
+          sx={{
+            m: 1,
+            bgcolor: 'primary.main',
+            width: 56,
+            height: 56,
+          }}
+        >
+          <img src="/image.png" alt="Logo" style={{ width: '100%', height: '100%' }} />
+        </Avatar>
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
@@ -135,8 +153,13 @@ const SignUp: React.FC = () => {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={loading} // Disable button while loading
           >
-            Sign Up
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Sign Up'
+            )}
           </Button>
         </Box>
       </Box>
